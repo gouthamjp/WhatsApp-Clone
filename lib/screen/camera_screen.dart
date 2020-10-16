@@ -1,45 +1,35 @@
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 import 'package:camera/camera.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 class CameraScreen extends StatefulWidget {
-  final CameraDescription camera;
+  List<CameraDescription> cameras;
 
-  const CameraScreen({
-    Key key,
-    @required this.camera,
-  }) : super(key: key);
+  CameraScreen(this.cameras);
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  CameraController control;
+
   @override
-    void initState() {
+  void initState() {
     super.initState();
-
-    _controller = CameraController(
-
-      widget.camera,
- 
-      ResolutionPreset.medium,
-    );
-
-    _initializeControllerFuture = _controller.initialize();
+    control = new CameraController(widget.cameras[0], ResolutionPreset.high);
+    control.initialize().then((_) {
+      if (!mounted) {
+        return;
+      } else {
+        setState(() {});
+      }
+    });
   }
 
-  @override
-  void dispose() {
-    // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
-    super.dispose();
-  }
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: FlatButton(child: Text("data"), onPressed: () {}),
+    );
   }
 }

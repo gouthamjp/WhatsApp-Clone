@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 
+import './camera_screen.dart';
+import '../screen/chat_screen.dart';
+import '../screen/status_screen.dart';
+import '../screen/calls_screen.dart';
 class HomeScreen extends StatefulWidget {
+  var camera;
+
+  HomeScreen(this.camera);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: 2,
+      initialIndex: 1,
       length: 4,
       child: Scaffold(
         appBar: AppBar(
@@ -18,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             Icon(Icons.search),
             SizedBox(width: 20),
-            Icon(Icons.more_vert)
+            DropdownButtonHideUnderline(child: DropdownButton(items: null, onChanged: null , icon: Icon(Icons.more_vert)))
           ],
           bottom: TabBar(tabs: [
             Tab(
@@ -36,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ]),
         ),
         body: TabBarView(
-            children: [Text("pg1"), Text("pg1"), Text("pg1"), Text("pg1")]),
+            children: [CameraScreen(widget.camera), ChatScreen(), StatusScreen(), CallScreen()]),
       ),
     );
   }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 import './screen/home_screen.dart';
+import 'package:camera/camera.dart';
+
+List<CameraDescription> cameras;
+
 void main() {
   runApp(MyApp());
 }
@@ -17,7 +21,7 @@ class MyApp extends StatelessWidget {
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: HomeScreen(cameras),
     );
   }
 }
