@@ -1,35 +1,53 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:camera/camera.dart';
 
 class CameraScreen extends StatefulWidget {
-  List<CameraDescription> cameras;
-
-  CameraScreen(this.cameras);
+  CameraScreen({Key key}) : super(key: key);
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  CameraController control;
+  CameraController _controller;
+  Future<void> _controllerInizializer;
+
+  Future<CameraDescription> getCamera() async {
+    final c = await availableCameras();
+    return c.first;
+  }
 
   @override
   void initState() {
     super.initState();
-    control = new CameraController(widget.cameras[0], ResolutionPreset.high);
-    control.initialize().then((_) {
-      if (!mounted) {
-        return;
-      } else {
-        setState(() {});
-      }
+
+    getCamera().then((camera) {
+      setState(() {
+        _controller = CameraController(camera, ResolutionPreset.high);
+        _controllerInizializer = _controller.initialize();
+      });
     });
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FlatButton(child: Text("data"), onPressed: () {}),
+    return Scaffold(
+      body: FutureBuilder(
+        future: _controllerInizializer,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return CameraPreview(_controller);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }
